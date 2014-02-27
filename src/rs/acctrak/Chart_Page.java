@@ -293,17 +293,20 @@ public class Chart_Page
     //this.spend_check.setOnCheckedChangeListener(this);
     
     // set ui dates
-    this.start_date_view.setText(rs.android.Util.To_String(start_date, "n/a", "dd/MM/yyyy"));
-    this.end_date_view.setText(rs.android.Util.To_String(end_date, "n/a", "dd/MM/yyyy"));
+    this.start_date_view.setText(rs.android.util.Type.To_String(start_date, "n/a", "dd/MM/yyyy"));
+    this.end_date_view.setText(rs.android.util.Type.To_String(end_date, "n/a", "dd/MM/yyyy"));
 
     // set chart data and invalidate
-    max_amount=(Double)db.Select_Value("select max(amount) from financial_action", Double.class);
+    max_amount=(Double)db.Select_Value(Double.class, "select max(amount) from financial_action");
+		if (max_amount==null)
+			max_amount=new Double(100);
     this.chart_view.Clear_Series();
     this.chart_view.Add_Series("balance", bal_data);
     this.chart_view.Add_Series("savings", sav_data);
     this.chart_view.Add_Series("expenses", exp_data);
     this.chart_view.Add_Series("to_spend", spnd_data);
-    this.chart_view.Set_Bound_Rect(start_date, Double.valueOf(0), end_date, max_amount+300);
+    this.chart_view.Set_Bound_Rect(start_date, Double.valueOf(0), end_date, 
+		  max_amount+300);
     this.chart_view.invalidate();
   }
   
@@ -316,9 +319,11 @@ public class Chart_Page
     
     if (this.getActivity()!=null)
     {
-      now=rs.android.Util.Now();
+      now=rs.android.util.Date.Now();
       res=new android.app.DatePickerDialog(this.getActivity(), this, 
-          rs.android.Util.Date_Get_Year(now), rs.android.Util.Date_Get_Month(now), rs.android.Util.Date_Get_Day(now));
+          rs.android.util.Date.Date_Get_Year(now), 
+					rs.android.util.Date.Date_Get_Month(now), 
+					rs.android.util.Date.Date_Get_Day(now));
     }
     return res;
   }
@@ -332,19 +337,23 @@ public class Chart_Page
     {
       date=Setting.Get_Start_Date(this.sp);
       if (date==null)
-        date=rs.android.Util.Add_Months(rs.android.Util.Now(), -1);
+        date=rs.android.util.Date.Add_Months(rs.android.util.Date.Now(), -1);
 
       date_dlg=(android.app.DatePickerDialog)dialog;
-      date_dlg.updateDate(rs.android.Util.Date_Get_Year(date), rs.android.Util.Date_Get_Month(date), rs.android.Util.Date_Get_Day(date));
+      date_dlg.updateDate(rs.android.util.Date.Date_Get_Year(date), 
+			  rs.android.util.Date.Date_Get_Month(date), 
+				rs.android.util.Date.Date_Get_Day(date));
     }
     else if (id==Chart_Page.DLG_INPUT_END_DATE)
     {
       date=Setting.Get_End_Date(this.sp);
       if (date==null)
-        date=rs.android.Util.Now();
+        date=rs.android.util.Date.Now();
 
       date_dlg=(android.app.DatePickerDialog)dialog;
-      date_dlg.updateDate(rs.android.Util.Date_Get_Year(date), rs.android.Util.Date_Get_Month(date), rs.android.Util.Date_Get_Day(date));
+      date_dlg.updateDate(rs.android.util.Date.Date_Get_Year(date), 
+			  rs.android.util.Date.Date_Get_Month(date), 
+				rs.android.util.Date.Date_Get_Day(date));
     }
   }
 
@@ -354,12 +363,12 @@ public class Chart_Page
     
     if (this.date_dlg_id==Chart_Page.DLG_INPUT_START_DATE)
     {
-      start_date=rs.android.Util.New_Date(year, month+1, day);
+      start_date=rs.android.util.Date.New_Date(year, month+1, day);
       Setting.Set_Start_Date(this.sp, start_date);
     }
     else if (this.date_dlg_id==Chart_Page.DLG_INPUT_END_DATE)
     {
-      end_date=rs.android.Util.New_Date(year, month+1, day);
+      end_date=rs.android.util.Date.New_Date(year, month+1, day);
       Setting.Set_End_Date(this.sp, end_date);
     }
     
@@ -555,11 +564,11 @@ public class Chart_Page
 
       this.world_window=new android.graphics.RectF();
       if (this.data_x_min!=null)
-        this.world_window.left=rs.android.Util.To_Float(this.data_x_min);
+        this.world_window.left=rs.android.util.Type.To_Float(this.data_x_min);
       if (this.data_x_max!=null)
-        this.world_window.right=rs.android.Util.To_Float(this.data_x_max);
+        this.world_window.right=rs.android.util.Type.To_Float(this.data_x_max);
       if (this.data_y_max!=null)
-        this.world_window.top=rs.android.Util.To_Float(this.data_y_max);
+        this.world_window.top=rs.android.util.Type.To_Float(this.data_y_max);
       this.world_window.bottom=0;
     }
     
@@ -584,13 +593,13 @@ public class Chart_Page
         data_x_inc=(long)(((double)data_x_max.getTime()-(double)data_x_min.getTime())/(double)10);
         for (x=data_x_min; x.before(data_x_max); x=(java.sql.Date)rs.android.Util.Add(x, data_x_inc))
         {
-          canvas_pt=rs.android.Util.To_Canvas_Pt(this.world_window, this.canvas_window, x.getTime(), (float)0);
+          canvas_pt=rs.android.ui.Util.To_Canvas_Pt(this.world_window, this.canvas_window, x.getTime(), (float)0);
           canvas.drawLine(canvas_pt.x, canvas_pt.y, canvas_pt.x, canvas_pt.y+10, this.axis_paint);
   
           this.text_paint.setTextAlign(android.graphics.Paint.Align.RIGHT);
           canvas.save();
           canvas.rotate(-45, canvas_pt.x+10, canvas_pt.y+10);
-          canvas.drawText(rs.android.Util.To_String(x, null, "dd/MM/yyyy"), canvas_pt.x, canvas_pt.y+10, this.text_paint);
+          canvas.drawText(rs.android.util.Type.To_String(x, null, "dd/MM/yyyy"), canvas_pt.x, canvas_pt.y+10, this.text_paint);
           canvas.restore();
         }
       }
@@ -607,11 +616,11 @@ public class Chart_Page
         data_y_inc=Double.valueOf(500);
         for (y=data_y_min; y<data_y_max; y+=data_y_inc)
         {
-          canvas_pt=rs.android.Util.To_Canvas_Pt(this.world_window, this.canvas_window, 0, y.floatValue());
+          canvas_pt=rs.android.ui.Util.To_Canvas_Pt(this.world_window, this.canvas_window, 0, y.floatValue());
           canvas.drawLine(this.canvas_window.left, canvas_pt.y, this.canvas_window.right, canvas_pt.y, this.axis_paint);
   
           this.text_paint.setTextAlign(android.graphics.Paint.Align.RIGHT);
-          canvas.drawText(rs.android.Util.To_String(y), this.canvas_window.left-5, canvas_pt.y, this.text_paint);
+          canvas.drawText(rs.android.util.Type.To_String(y), this.canvas_window.left-5, canvas_pt.y, this.text_paint);
         }
       }
       
@@ -656,7 +665,7 @@ public class Chart_Page
           if (fa_series.size()==1)
           {
             fa=fa_series.get(0);
-            canvas_pt=rs.android.Util.To_Canvas_Pt(this.world_window, this.canvas_window, 
+            canvas_pt=rs.android.ui.Util.To_Canvas_Pt(this.world_window, this.canvas_window, 
                 fa.action_date.getTime(), fa.amount.floatValue());
             
             canvas.drawLine(this.canvas_window.left, this.canvas_window.bottom, canvas_pt.x, this.canvas_window.bottom, data_paint);
@@ -671,7 +680,7 @@ public class Chart_Page
               fa=fa_series.get(c);
               //rs.android.Util.Dump_To_Log(fa);
               
-              canvas_pt=rs.android.Util.To_Canvas_Pt(this.world_window, this.canvas_window, 
+              canvas_pt=rs.android.ui.Util.To_Canvas_Pt(this.world_window, this.canvas_window, 
                 fa.action_date.getTime(), fa.amount.floatValue());
               
               if (last_pt!=null)

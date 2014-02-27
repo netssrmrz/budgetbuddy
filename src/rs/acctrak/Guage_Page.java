@@ -295,7 +295,7 @@ public class Guage_Page
     String sql;
     
     sql="select max(start_date) from Alert_Update where status='completed'";
-    sql_res=(java.sql.Date)db.Select_Value(sql, java.sql.Date.class);
+    sql_res=(java.sql.Date)db.Select_Value(java.sql.Date.class, sql);
     if (rs.android.Util.NotEmpty(sql_res))
       this.guage_view.setLastUpdatedAt(sql_res);
   }
@@ -308,7 +308,7 @@ public class Guage_Page
   public void setSavings(float savings)
   {
     this.savings=savings;
-    this.savings_view.setText(rs.android.Util.To_String(savings, "n/a", "$#,##0.00"));
+    this.savings_view.setText(rs.android.util.Type.To_String(savings, "n/a", "$#,##0.00"));
     this.guage_view.setSavings(savings);
     this.setAvailPerDay();
   }
@@ -321,7 +321,7 @@ public class Guage_Page
   public void setExpenses(float expenses)
   {
     this.expenses=expenses;
-    this.expenses_view.setText(rs.android.Util.To_String(expenses, "n/a", "$#,##0.00"));
+    this.expenses_view.setText(rs.android.util.Type.To_String(expenses, "n/a", "$#,##0.00"));
     this.guage_view.setExpenses(expenses);
     this.setAvailPerDay();
   }
@@ -347,7 +347,7 @@ public class Guage_Page
     }
     
     this.balance=balance;
-    this.balance_view.setText(rs.android.Util.To_String(balance, "n/a", "$#,##0.00"));
+    this.balance_view.setText(rs.android.util.Type.To_String(balance, "n/a", "$#,##0.00"));
     this.guage_view.setBalance(balance);
     this.setAvailPerDay();
   }
@@ -363,14 +363,15 @@ public class Guage_Page
 
     if (next_pay!=null)
     {
-      today=(java.sql.Date)rs.android.Util.Round(rs.android.Util.Now(), rs.android.Util.ROUND_DATE_DAY);
+      today=(java.sql.Date)rs.android.Util.Round(rs.android.util.Date.Now(), 
+			  rs.android.util.Date.ROUND_DATE_DAY);
       this.avail_days=(next_pay.getTime()-today.getTime())/(1000*60*60*24);
     }
     else
       this.avail_days=0;
     
     this.next_pay=next_pay;
-    this.pay_view.setText(rs.android.Util.To_String(next_pay, "n/a", "dd/MM/yyyy"));
+    this.pay_view.setText(rs.android.util.Type.To_String(next_pay, "n/a", "dd/MM/yyyy"));
     this.setAvailPerDay();
   }
 
@@ -385,7 +386,7 @@ public class Guage_Page
       this.avail_per_day=(this.balance-this.expenses-this.savings)/this.avail_days;
     else
       this.avail_per_day=0;
-    this.spend_view.setText(rs.android.Util.To_String(this.avail_per_day, "n/a", "$#,##0.00"));
+    this.spend_view.setText(rs.android.util.Type.To_String(this.avail_per_day, "n/a", "$#,##0.00"));
   }
   
   // Dialog Functions =============================================================================================================================================================
@@ -496,9 +497,10 @@ public class Guage_Page
       }
       else if (id==Guage_Page.DLG_INPUT_PAY)
       {
-        now=rs.android.Util.Now();
+        now=rs.android.util.Date.Now();
         res=new android.app.DatePickerDialog(this.getActivity(), this, 
-            rs.android.Util.Date_Get_Year(now), rs.android.Util.Date_Get_Month(now), rs.android.Util.Date_Get_Day(now));
+            rs.android.util.Date.Date_Get_Year(now), rs.android.util.Date.Date_Get_Month(now), 
+						rs.android.util.Date.Date_Get_Day(now));
       }
     }
     return res;
@@ -519,7 +521,7 @@ public class Guage_Page
         val=fa.amount;
 
       input_view=(android.widget.EditText)dialog.findViewById(id);
-      input_view.setText(rs.android.Util.To_String(val));
+      input_view.setText(rs.android.util.Type.To_String(val));
       rs.android.ui.Touch_Fn.Focus(input_view);
     }
     else if (id==Guage_Page.DLG_INPUT_SAV)
@@ -529,7 +531,7 @@ public class Guage_Page
         val=fa.amount;
 
       input_view=(android.widget.EditText)dialog.findViewById(id);
-      input_view.setText(rs.android.Util.To_String(val));
+      input_view.setText(rs.android.util.Type.To_String(val));
       rs.android.ui.Touch_Fn.Focus(input_view);
     }
     else if (id==Guage_Page.DLG_INPUT_EXP)
@@ -539,7 +541,7 @@ public class Guage_Page
         val=fa.amount;
 
       input_view=(android.widget.EditText)dialog.findViewById(id);
-      input_view.setText(rs.android.Util.To_String(val));
+      input_view.setText(rs.android.util.Type.To_String(val));
       rs.android.ui.Touch_Fn.Focus(input_view);
     }
     if (id==Guage_Page.DLG_INPUT_PAY)
@@ -548,10 +550,12 @@ public class Guage_Page
       if (fa!=null)
         next_pay=fa.action_date;
       else
-        next_pay=rs.android.Util.Now();
+        next_pay=rs.android.util.Date.Now();
 
       date_dlg=(android.app.DatePickerDialog)dialog;
-      date_dlg.updateDate(rs.android.Util.Date_Get_Year(next_pay), rs.android.Util.Date_Get_Month(next_pay), rs.android.Util.Date_Get_Day(next_pay));
+      date_dlg.updateDate(rs.android.util.Date.Date_Get_Year(next_pay), 
+			  rs.android.util.Date.Date_Get_Month(next_pay), 
+				rs.android.util.Date.Date_Get_Day(next_pay));
     }
   }
     
@@ -572,7 +576,7 @@ public class Guage_Page
       {
         input_view=(android.widget.EditText)this.bal_dlg.findViewById(Guage_Page.DLG_INPUT_BAL);
         input_str=input_view.getText().toString();
-        balance=rs.android.Util.ToDouble(input_str);
+        balance=rs.android.util.Type.ToDouble(input_str);
         
         if (balance!=null)
         {
@@ -580,7 +584,7 @@ public class Guage_Page
             balance=(double)0;
           
           fa=new Financial_Action();
-          fa.action_date=rs.android.Util.Now();
+          fa.action_date=rs.android.util.Date.Now();
           fa.action_type="balance";
           fa.amount=balance;
           fa.Save(this.db);
@@ -609,7 +613,7 @@ public class Guage_Page
       {
         input_view=(android.widget.EditText)this.sav_dlg.findViewById(Guage_Page.DLG_INPUT_SAV);
         input_str=input_view.getText().toString();
-        savings=rs.android.Util.ToDouble(input_str);
+        savings=rs.android.util.Type.ToDouble(input_str);
         
         if (savings!=null)
         {
@@ -637,7 +641,7 @@ public class Guage_Page
       {
         input_view=(android.widget.EditText)this.exp_dlg.findViewById(Guage_Page.DLG_INPUT_EXP);
         input_str=input_view.getText().toString();
-        expenses=rs.android.Util.ToDouble(input_str);
+        expenses=rs.android.util.Type.ToDouble(input_str);
         
         if (expenses<0)
           expenses=(double)0;
@@ -663,18 +667,19 @@ public class Guage_Page
     Financial_Action fa;
     java.sql.Date next_pay, now;
 
-    now=rs.android.Util.Now();
+    now=rs.android.util.Date.Now();
     this.db.Delete("Financial_Action", "action_type='income' and action_date>?", 
-        ((java.sql.Date)rs.android.Util.Round(now, rs.android.Util.ROUND_DATE_DAY)).getTime());
+        ((java.sql.Date)rs.android.Util.Round(now, 
+				rs.android.util.Date.ROUND_DATE_DAY)).getTime());
 
-    next_pay=rs.android.Util.New_Date(year, month+1, day);
+    next_pay=rs.android.util.Date.New_Date(year, month+1, day);
     
     if (next_pay.before(now))
       next_pay=null;
     else
     {
       fa=new Financial_Action();
-      fa.action_date=rs.android.Util.Now();
+      fa.action_date=rs.android.util.Date.Now();
       fa.action_date=next_pay;
       fa.action_type="income";
       fa.Save(this.db);
@@ -948,7 +953,8 @@ public class Guage_Page
     public void setLastUpdatedAt(java.sql.Date upd_date)
     {
       if (rs.android.Util.NotEmpty(upd_date))
-        this.last_upd_text="Last Updated at: "+rs.android.Util.To_String(upd_date, null, "dd/MM/yyyy hh:mm:ss a");
+        this.last_upd_text="Last Updated at: "+
+				  rs.android.util.Type.To_String(upd_date, null, "dd/MM/yyyy hh:mm:ss a");
       else
         this.last_upd_text=null;
       this.invalidate();

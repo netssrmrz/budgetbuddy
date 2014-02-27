@@ -34,7 +34,7 @@ public class Content
         {
           if (params[c] instanceof java.util.Date) 
             params[c]=((java.util.Date)params[c]).getTime();
-          param_vals[c]=Util.To_String(params[c]);
+          param_vals[c]=rs.android.util.Type.To_String(params[c]);
         }
       }
         

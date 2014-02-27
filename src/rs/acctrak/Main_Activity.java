@@ -1,7 +1,7 @@
 package rs.acctrak; 
 
-import android.net.Uri;
-import android.view.View;
+//import android.net.Uri;
+//import android.view.View;
 
 public class Main_Activity 
   extends android.support.v4.app.FragmentActivity 
@@ -202,7 +202,7 @@ public class Main_Activity
     }
     else if (item.getItemId()==3)
     {
-      this.db.Insert_Test_Data();
+      //this.db.Insert_Test_Data();
 
       this.Update_UI(this.db);
       res=true;
@@ -285,7 +285,7 @@ public class Main_Activity
           csv_stream = new java.io.FileOutputStream(csv_file);
           csv_stream.write(csv.getBytes());
           csv_stream.close();
-          file_uris.add(Uri.fromFile(csv_file));
+          file_uris.add(android.net.Uri.fromFile(csv_file));
         }
         
         csv=db.Dump_Table_To_CSV("Alert", "rec_date", java.sql.Date.class);
@@ -295,7 +295,7 @@ public class Main_Activity
           csv_stream = new java.io.FileOutputStream(csv_file);
           csv_stream.write(csv.getBytes());
           csv_stream.close();
-          file_uris.add(Uri.fromFile(csv_file));
+          file_uris.add(android.net.Uri.fromFile(csv_file));
         }
         
         csv=db.Dump_Table_To_CSV("Alert_Update", "start_date", java.sql.Date.class, "last_update_date", java.sql.Date.class);
@@ -305,7 +305,7 @@ public class Main_Activity
           csv_stream = new java.io.FileOutputStream(csv_file);
           csv_stream.write(csv.getBytes());
           csv_stream.close();
-          file_uris.add(Uri.fromFile(csv_file));
+          file_uris.add(android.net.Uri.fromFile(csv_file));
         }
         
         if (rs.android.Util.NotEmpty(file_uris))
@@ -350,7 +350,8 @@ public class Main_Activity
     return res;
   }
 
-  public android.widget.TextView New_Text(String text, int col, int size, View.OnClickListener click)
+  public android.widget.TextView New_Text(String text, int col, int size, 
+	  android.view.View.OnClickListener click)
   {
     android.widget.TextView res=null;
     

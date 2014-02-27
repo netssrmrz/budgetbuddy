@@ -11,7 +11,7 @@ implements rs.android.setting.Mail
   {
     java.sql.Date res=null;
     
-    res=(java.sql.Date)db.Select_Value("select value from setting where key=?", java.sql.Date.class, key);
+    res=(java.sql.Date)db.Select_Value(java.sql.Date.class, "select value from setting where key=?", key);
     return res;
   }
   
@@ -20,7 +20,7 @@ implements rs.android.setting.Mail
     boolean res=false;
     Boolean db_res;
     
-    db_res=(Boolean)db.Select_Value("select value from setting where key=?", Boolean.class, key);
+    db_res=(Boolean)db.Select_Value(Boolean.class, "select value from setting where key=?", key);
     if (db_res!=null)
       res=db_res.booleanValue();
     return res;
@@ -220,7 +220,7 @@ implements rs.android.setting.Mail
     float res=(float)100;
     
     if (prefs!=null)
-      res=rs.android.Util.To_Float(prefs.getString("guage_max", rs.android.Util.To_String(res)));
+      res=rs.android.util.Type.To_Float(prefs.getString("guage_max", rs.android.util.Type.To_String(res)));
     return res;
   }
   

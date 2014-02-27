@@ -80,13 +80,13 @@ implements android.content.SharedPreferences.OnSharedPreferenceChangeListener
     prefs=ps.getSharedPreferences();
     
     pref=ps.findPreference("check_auto_update");
-    pref.setSummary(Util.To_String(Setting.Get_Check_Auto_Update(prefs), null, "On,Off"));
+    pref.setSummary(rs.android.util.Type.To_String(Setting.Get_Check_Auto_Update(prefs), null, "On,Off"));
     
     pref=ps.findPreference("check_sms");
-    pref.setSummary(Util.To_String(Setting.Get_Check_Sms(prefs), null, "On,Off"));
+    pref.setSummary(rs.android.util.Type.To_String(Setting.Get_Check_Sms(prefs), null, "On,Off"));
     
     pref=ps.findPreference("check_email");
-    pref.setSummary(Util.To_String(Setting.Get_Check_Email(prefs), null, "On,Off"));
+    pref.setSummary(rs.android.util.Type.To_String(Setting.Get_Check_Email(prefs), null, "On,Off"));
     
     pref=ps.findPreference("mail_host");
     pref.setSummary(settings.Get_Mail_Host(prefs));
@@ -101,7 +101,7 @@ implements android.content.SharedPreferences.OnSharedPreferenceChangeListener
     pref.setSummary(settings.Get_Mail_Folder(prefs));
     
     pref=ps.findPreference("guage_max");
-    pref.setSummary(Util.To_String(Setting.Get_Guage_Max(prefs)));
+    pref.setSummary(rs.android.util.Type.To_String(Setting.Get_Guage_Max(prefs)));
   }
   
   public void onSharedPreferenceChanged(android.content.SharedPreferences prefs, String key) 
@@ -126,7 +126,7 @@ implements android.content.SharedPreferences.OnSharedPreferenceChangeListener
     }
     else if (key.equals("guage_max"))
     {
-      guage_max=rs.android.Util.To_Float(prefs.getString("guage_max", "100"));
+      guage_max=rs.android.util.Type.To_Float(prefs.getString("guage_max", "100"));
       if (guage_max<100)
       {
         prefs=ps.getSharedPreferences();

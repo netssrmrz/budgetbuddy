@@ -21,7 +21,7 @@ public class Financial_Action
     Integer id;
     
     sql="select id from Financial_Action order by amount desc";
-    id=(Integer)db.Select_Value(sql, Integer.class);
+    id=(Integer)db.Select_Value(Integer.class, sql);
     if (rs.android.Util.NotEmpty(id))
     {
       res=(Financial_Action)db.SelectObj(Financial_Action.class, id);
@@ -35,8 +35,9 @@ public class Financial_Action
     Financial_Action fa;
     java.sql.Date start, end;
     
-    start=(java.sql.Date)rs.android.Util.Round(this.action_date, rs.android.Util.ROUND_DATE_DAY);
-    end=rs.android.Util.Add_Days(start, 1);
+    start=(java.sql.Date)rs.android.Util.Round(this.action_date, 
+		  rs.android.util.Date.ROUND_DATE_DAY);
+    end=rs.android.util.Date.Add_Days(start, 1);
     
     sql=
       "select * "+
@@ -62,7 +63,7 @@ public class Financial_Action
     sql=new rs.android.SQL("id", "Financial_Action", null, "action_date desc");
     if (rs.android.Util.NotEmpty(action_type))
       sql.Append_Filter("action_type=?", action_type);
-    id=(Integer)db.Select_Value(sql.ToString(), Integer.class, sql.Get_Param_Vals());
+    id=(Integer)db.Select_Value(Integer.class, sql.ToString(), sql.Get_Param_Vals());
     if (rs.android.Util.NotEmpty(id))
       res=(Financial_Action)db.SelectObj(Financial_Action.class, id);
     return res;
@@ -88,7 +89,7 @@ public class Financial_Action
     java.sql.Date res=null;
     
     if (rs.android.Util.NotEmpty(db) & db.Rows_Exist("financial_action", "action_date is not null"))
-      res=(java.sql.Date)db.Select_Value("select min(action_date) from financial_action", java.sql.Date.class);
+      res=(java.sql.Date)db.Select_Value(java.sql.Date.class, "select min(action_date) from financial_action");
     return res;
   }
   
@@ -97,7 +98,7 @@ public class Financial_Action
     java.sql.Date res=null;
     
     if (rs.android.Util.NotEmpty(db) & db.Rows_Exist("financial_action", "action_date is not null"))
-      res=(java.sql.Date)db.Select_Value("select max(action_date) from financial_action", java.sql.Date.class);
+      res=(java.sql.Date)db.Select_Value(java.sql.Date.class, "select max(action_date) from financial_action");
     return res;
   }
 
@@ -143,7 +144,7 @@ public class Financial_Action
     Financial_Action fa;
     
     fa=new Financial_Action();
-    fa.action_date=rs.android.Util.Now();
+    fa.action_date=rs.android.util.Date.Now();
     fa.action_type="savings";
     fa.amount=savings;
     fa.Save(db);
@@ -154,7 +155,7 @@ public class Financial_Action
     Financial_Action fa;
     
     fa=new Financial_Action();
-    fa.action_date=rs.android.Util.Now();
+    fa.action_date=rs.android.util.Date.Now();
     fa.action_type="expenses";
     fa.amount=expenses;
     fa.Save(db);

@@ -44,7 +44,7 @@ public class Alert
     String bal_str;
     
     bal_str=rs.android.Util.Extract_Str("AvailableBalance</strong></td><td>", "</td>", msg);
-    res=rs.android.Util.ToDouble(bal_str);
+    res=rs.android.util.Type.ToDouble(bal_str);
     
     return res;
   }
@@ -55,7 +55,7 @@ public class Alert
     String bal_str;
     
     bal_str=rs.android.Util.Extract_Str("Availablebal$", null, msg);
-    res=rs.android.Util.ToDouble(bal_str);
+    res=rs.android.util.Type.ToDouble(bal_str);
     
     return res;
   }
@@ -67,7 +67,7 @@ public class Alert
     Integer sql_res;
     
     sql="select id from alert where ext_id=? and source=? and from_address=?";
-    sql_res=(Integer)db.Select_Value(sql, Integer.class, this.ext_id, this.source, this.from_address);
+    sql_res=(Integer)db.Select_Value(Integer.class, sql, this.ext_id, this.source, this.from_address);
     if (sql_res!=null)
       res=true;
     return res;
@@ -80,7 +80,7 @@ public class Alert
     Integer id;
     
     sql="select id from alert order by rec_date desc";
-    id=(Integer)db.Select_Value(sql, Integer.class);
+    id=(Integer)db.Select_Value(Integer.class, sql);
     if (rs.android.Util.NotEmpty(id))
     {
       res=(Alert)db.SelectObj(Alert.class, id);
@@ -95,7 +95,7 @@ public class Alert
     Integer id;
     
     sql="select id from alert order by balance desc";
-    id=(Integer)db.Select_Value(sql, Integer.class);
+    id=(Integer)db.Select_Value(Integer.class, sql);
     if (rs.android.Util.NotEmpty(id))
     {
       res=(Alert)db.SelectObj(Alert.class, id);
@@ -117,7 +117,7 @@ public class Alert
     if (rs.android.Util.NotEmpty(db) && rs.android.Util.NotEmpty(db))
     {
       sql="select max(rec_date) from alert where source='sms'";
-      last_date=(java.sql.Date)db.Select_Value(sql, java.sql.Date.class);
+      last_date=(java.sql.Date)db.Select_Value(java.sql.Date.class, sql);
     
       where="protocol is not null";
       from=android.net.Uri.parse("content://sms/");
@@ -160,7 +160,7 @@ public class Alert
     if (rs.android.Util.NotEmpty(db) && rs.android.Util.NotEmpty(db))
     {
       sql="select max(rec_date) from alert where source='sms'";
-      last_date=(java.sql.Date)db.Select_Value(sql, java.sql.Date.class);
+      last_date=(java.sql.Date)db.Select_Value(java.sql.Date.class, sql);
     
       where="protocol is not null";
       from=android.net.Uri.parse("content://sms/");
@@ -179,7 +179,7 @@ public class Alert
         where="_id=?";
         for (c=0; c<ids.length; c++)
         {
-          id=rs.android.Util.To_String(ids[c]);
+          id=rs.android.util.Type.To_String(ids[c]);
           sms=(rs.android.Sms)android_db.Select_Obj(rs.android.Sms.class, null, from, where, null, id);
 
           alert=new Alert();
@@ -250,7 +250,7 @@ public class Alert
       if (rs.android.Util.NotEmpty(mail) && rs.android.Util.NotEmpty(db) && mail.inbox!=null)
       {
         sql="select max(cast(ext_id as integer)) from alert where source='email'";
-        last_uid=(Long)db.Select_Value(sql, Long.class);
+        last_uid=(Long)db.Select_Value(Long.class, sql);
         msgCount=mail.Get_Msg_Count();
         
         for(i = msgCount; i >= 1; i--)
@@ -273,7 +273,7 @@ public class Alert
             alert.source="email";
             if (alert.Is_Bank_Alert())
             {
-              alert.ext_id=rs.android.Util.To_String(uid);
+              alert.ext_id=rs.android.util.Type.To_String(uid);
               if (!alert.Exists(db))
               {
                 alert.subject=rs.android.Mail.Get_Subject(msg);

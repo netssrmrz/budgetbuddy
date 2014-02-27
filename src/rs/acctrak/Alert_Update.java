@@ -25,7 +25,7 @@ public class Alert_Update
     String sql;
     
     sql="select id from Alert_Update where status like 'started%'";
-    sql_res=(Integer)db.Select_Value(sql, Integer.class);
+    sql_res=(Integer)db.Select_Value(Integer.class, sql);
     if (rs.android.Util.NotEmpty(sql_res))
       res=true;
     
@@ -46,12 +46,13 @@ public class Alert_Update
     db=new rs.acctrak.Db(ctx);
     if (rs.android.Util.NotEmpty(db))
     {
-      db.Delete("Alert_Update", "last_update_date<?", rs.android.Util.Add_Days(rs.android.Util.Now(), -7));
+      db.Delete("Alert_Update", "last_update_date<?", 
+			  rs.android.util.Date.Add_Days(rs.android.util.Date.Now(), -7));
       
       if (!Alert_Update.Underway(db))
       {
         this.origin=origin;
-        this.start_date=rs.android.Util.Now();
+        this.start_date=rs.android.util.Date.Now();
         this.last_update_date=this.start_date;
         this.new_emails=null;
         this.new_sms=null;
@@ -90,14 +91,14 @@ public class Alert_Update
         if (mail!=null)
           mail.Close();
         
-        this.last_update_date=rs.android.Util.Now();
+        this.last_update_date=rs.android.util.Date.Now();
         this.status="started, 0.5";
         db.Save(this);
   
         if (check_sms)
           this.new_sms=Alert.Update_From_SMS(db, ctx, proc);
         
-        this.last_update_date=rs.android.Util.Now();
+        this.last_update_date=rs.android.util.Date.Now();
         this.status="completed";
         db.Save(this);
         
