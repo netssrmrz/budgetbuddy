@@ -26,7 +26,7 @@ public class Guage_Page
   public android.app.DatePickerDialog pay_dlg;
   public Main_Activity activity;
   
-  public rs.acctrak.Db db;
+  public rs.acctrak.db.Db db;
   public float savings, expenses, balance, avail_per_day, avail_days;
   public boolean savings_changed, expenses_changed;
   public java.sql.Date next_pay;
@@ -49,7 +49,7 @@ public class Guage_Page
     float wr, hr;
     
     this.activity=(Main_Activity)this.getActivity();
-    this.db=new rs.acctrak.Db(this.getActivity());
+    this.db=new rs.acctrak.db.Db(this.getActivity());
     com.nineoldandroids.animation.ObjectAnimator.setFrameDelay(1);
     this.savings_changed=false;
     this.expenses_changed=false;
@@ -204,7 +204,7 @@ public class Guage_Page
     super.onResume();
     
     if (this.db==null)
-      this.db=new rs.acctrak.Db(this.getActivity());
+      this.db=new rs.acctrak.db.Db(this.getActivity());
     
     this.Update_UI(this.db);
   }
@@ -249,35 +249,35 @@ public class Guage_Page
     }
   }
   
-  public void Update_UI(rs.acctrak.Db db)
+  public void Update_UI(rs.acctrak.db.Db db)
   {
-    Financial_Action fa;
+    rs.acctrak.db.Financial_Action fa;
     
-    fa=Financial_Action.Get_Max(db);
+    fa=rs.acctrak.db.Financial_Action.Get_Max(db);
     if (fa!=null && fa.amount!=null)
       this.guage_view.max_value=fa.amount.floatValue();
     else
       this.guage_view.max_value=1000;
     
-    fa=Financial_Action.Get_Latest(db, "income");
+    fa=rs.acctrak.db.Financial_Action.Get_Latest(db, "income");
     if (fa!=null)
       this.setNextPay(fa.action_date);
     else
       this.setNextPay(null);
 
-    fa=Financial_Action.Get_Latest(db, "balance");
+    fa=rs.acctrak.db.Financial_Action.Get_Latest(db, "balance");
     if (fa!=null && fa.amount!=null)
       this.setBalance(fa.amount.floatValue());
     else
       this.setBalance(0);
 
-    fa=Financial_Action.Get_Latest(db, "savings");
+    fa=rs.acctrak.db.Financial_Action.Get_Latest(db, "savings");
     if (fa!=null && fa.amount!=null)
       this.setSavings(fa.amount.floatValue());
     else
       this.setSavings(0);
     
-    fa=Financial_Action.Get_Latest(db, "expenses");
+    fa=rs.acctrak.db.Financial_Action.Get_Latest(db, "expenses");
     if (fa!=null && fa.amount!=null)
       this.setExpenses(fa.amount.floatValue());
     else
@@ -399,12 +399,12 @@ public class Guage_Page
   {
     if (this.savings_changed)
     {
-      Financial_Action.Save_Savings(this.db, (double)this.savings);
+      rs.acctrak.db.Financial_Action.Save_Savings(this.db, (double)this.savings);
       this.savings_changed=false;
     }
     if (this.expenses_changed)
     {
-      Financial_Action.Save_Expenses(this.db, (double)this.expenses);
+      rs.acctrak.db.Financial_Action.Save_Expenses(this.db, (double)this.expenses);
       this.expenses_changed=false;
     }
   }
@@ -509,14 +509,14 @@ public class Guage_Page
   public void onPrepareDialog(int id, android.app.Dialog dialog)
   {
     android.widget.EditText input_view;
-    Financial_Action fa;
+    rs.acctrak.db.Financial_Action fa;
     Double val=null;
     java.sql.Date next_pay=null;
     android.app.DatePickerDialog date_dlg;
 
     if (id==Guage_Page.DLG_INPUT_BAL)
     {
-      fa=Financial_Action.Get_Latest(this.db, "balance");
+      fa=rs.acctrak.db.Financial_Action.Get_Latest(this.db, "balance");
       if (fa!=null)
         val=fa.amount;
 
@@ -526,7 +526,7 @@ public class Guage_Page
     }
     else if (id==Guage_Page.DLG_INPUT_SAV)
     {
-      fa=Financial_Action.Get_Latest(db, "savings");
+      fa=rs.acctrak.db.Financial_Action.Get_Latest(db, "savings");
       if (fa!=null)
         val=fa.amount;
 
@@ -536,7 +536,7 @@ public class Guage_Page
     }
     else if (id==Guage_Page.DLG_INPUT_EXP)
     {
-      fa=Financial_Action.Get_Latest(this.db, "expenses");
+      fa=rs.acctrak.db.Financial_Action.Get_Latest(this.db, "expenses");
       if (fa!=null)
         val=fa.amount;
 
@@ -546,7 +546,7 @@ public class Guage_Page
     }
     if (id==Guage_Page.DLG_INPUT_PAY)
     {
-      fa=Financial_Action.Get_Latest(this.db, "income");
+      fa=rs.acctrak.db.Financial_Action.Get_Latest(this.db, "income");
       if (fa!=null)
         next_pay=fa.action_date;
       else
@@ -563,7 +563,7 @@ public class Guage_Page
   {
     android.widget.EditText input_view;
     String input_str;
-    Financial_Action fa;
+    rs.acctrak.db.Financial_Action fa;
     Double balance;
     Double savings;
     Double expenses;
@@ -583,7 +583,7 @@ public class Guage_Page
           if (balance<0)
             balance=(double)0;
           
-          fa=new Financial_Action();
+          fa=new rs.acctrak.db.Financial_Action();
           fa.action_date=rs.android.util.Date.Now();
           fa.action_type="balance";
           fa.amount=balance;
@@ -622,7 +622,7 @@ public class Guage_Page
           if (savings>this.getBalance()-this.getExpenses())
             savings=(double)this.getBalance()-(double)this.getExpenses();
           
-          Financial_Action.Save_Savings(this.db, savings);
+          rs.acctrak.db.Financial_Action.Save_Savings(this.db, savings);
           
           a=(Main_Activity)this.getActivity();
           if (a!=null && a.chart_page!=null)
@@ -648,7 +648,7 @@ public class Guage_Page
         if (expenses>this.getBalance()-this.getSavings())
           expenses=(double)this.getBalance()-(double)this.getSavings();
 
-        Financial_Action.Save_Expenses(this.db, expenses);
+        rs.acctrak.db.Financial_Action.Save_Expenses(this.db, expenses);
         
         a=(Main_Activity)this.getActivity();
         if (a!=null && a.chart_page!=null)
@@ -664,7 +664,7 @@ public class Guage_Page
 //
   public void onDateSet(android.widget.DatePicker view, int year, int month, int day)
   {
-    Financial_Action fa;
+    rs.acctrak.db.Financial_Action fa;
     java.sql.Date next_pay, now;
 
     now=rs.android.util.Date.Now();
@@ -678,7 +678,7 @@ public class Guage_Page
       next_pay=null;
     else
     {
-      fa=new Financial_Action();
+      fa=new rs.acctrak.db.Financial_Action();
       fa.action_date=rs.android.util.Date.Now();
       fa.action_date=next_pay;
       fa.action_type="income";

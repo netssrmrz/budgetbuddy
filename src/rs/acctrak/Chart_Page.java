@@ -20,7 +20,7 @@ public class Chart_Page
   public android.widget.TextView end_date_view;
   
   public int date_dlg_id;
-  public rs.acctrak.Db db;
+  public rs.acctrak.db.Db db;
   public android.content.SharedPreferences sp;
 
   @Override
@@ -36,7 +36,7 @@ public class Chart_Page
     android.util.DisplayMetrics dm;
     float wr, hr;
 
-    this.db=new rs.acctrak.Db(this.getActivity());
+    this.db=new rs.acctrak.db.Db(this.getActivity());
     dm=this.getResources().getDisplayMetrics();
     hr=dm.heightPixels/(float)100;
     wr=dm.widthPixels/(float)100;
@@ -189,7 +189,7 @@ public class Chart_Page
     super.onResume();
     
     if (this.db==null)
-      this.db=new rs.acctrak.Db(this.getActivity());
+      this.db=new rs.acctrak.db.Db(this.getActivity());
     
     if (this.sp==null)
       this.sp = android.preference.PreferenceManager.getDefaultSharedPreferences(this.getActivity());
@@ -211,11 +211,11 @@ public class Chart_Page
   public void onCheckedChanged(android.widget.CompoundButton check, boolean is_checked)
   {
     if (check==this.balance_check)
-      Setting.Set_Show_Balance(this.sp, is_checked);
+      rs.acctrak.db.Setting.Set_Show_Balance(this.sp, is_checked);
     if (check==this.savings_check)
-      Setting.Set_Show_Savings(this.sp, is_checked);
+      rs.acctrak.db.Setting.Set_Show_Savings(this.sp, is_checked);
     if (check==this.expenses_check)
-      Setting.Set_Show_Expenses(this.sp, is_checked);
+      rs.acctrak.db.Setting.Set_Show_Expenses(this.sp, is_checked);
     //if (check==this.spend_check)
       //Setting.Set_Show_To_Spend(this.sp, is_checked);
     
@@ -236,7 +236,7 @@ public class Chart_Page
     }
   }
   
-  public void Update_UI(rs.acctrak.Db db)
+  public void Update_UI(rs.acctrak.db.Db db)
   {
     boolean show_to_spend, show_expenses, show_savings, show_balance;
     java.sql.Date start_date, end_date;
@@ -244,24 +244,24 @@ public class Chart_Page
     Double max_amount;
     
     // read checkbox setings
-    show_balance=Setting.Get_Show_Balance(this.sp);
-    show_savings=Setting.Get_Show_Savings(this.sp);
-    show_expenses=Setting.Get_Show_Expenses(this.sp);
-    show_to_spend=Setting.Get_Show_To_Spend(this.sp);
+    show_balance=rs.acctrak.db.Setting.Get_Show_Balance(this.sp);
+    show_savings=rs.acctrak.db.Setting.Get_Show_Savings(this.sp);
+    show_expenses=rs.acctrak.db.Setting.Get_Show_Expenses(this.sp);
+    show_to_spend=rs.acctrak.db.Setting.Get_Show_To_Spend(this.sp);
     
     // read date settings    
-    start_date=Setting.Get_Start_Date(this.sp);
-    end_date=Setting.Get_End_Date(this.sp);
+    start_date=rs.acctrak.db.Setting.Get_Start_Date(this.sp);
+    end_date=rs.acctrak.db.Setting.Get_End_Date(this.sp);
 
     // read chart data
     if (show_balance)
-      bal_data=Financial_Action.SelectObjs(db, null, "action_type='balance'", "action_date asc");
+      bal_data=rs.acctrak.db.Financial_Action.SelectObjs(db, null, "action_type='balance'", "action_date asc");
     if (show_savings)
-      sav_data=Financial_Action.SelectObjs(db, null, "action_type='savings'", "action_date asc");
+      sav_data=rs.acctrak.db.Financial_Action.SelectObjs(db, null, "action_type='savings'", "action_date asc");
     if (show_expenses)
-      exp_data=Financial_Action.SelectObjs(db, null, "action_type='expenses'", "action_date asc");
+      exp_data=rs.acctrak.db.Financial_Action.SelectObjs(db, null, "action_type='expenses'", "action_date asc");
     if (show_to_spend)
-      spnd_data=Financial_Action.SelectObjs(db, null, "action_type='to_spend'", "action_date asc");
+      spnd_data=rs.acctrak.db.Financial_Action.SelectObjs(db, null, "action_type='to_spend'", "action_date asc");
 
     // set ui checkboxes
     this.balance_check.setOnCheckedChangeListener(null);
@@ -335,7 +335,7 @@ public class Chart_Page
 
     if (id==Chart_Page.DLG_INPUT_START_DATE)
     {
-      date=Setting.Get_Start_Date(this.sp);
+      date=rs.acctrak.db.Setting.Get_Start_Date(this.sp);
       if (date==null)
         date=rs.android.util.Date.Add_Months(rs.android.util.Date.Now(), -1);
 
@@ -346,7 +346,7 @@ public class Chart_Page
     }
     else if (id==Chart_Page.DLG_INPUT_END_DATE)
     {
-      date=Setting.Get_End_Date(this.sp);
+      date=rs.acctrak.db.Setting.Get_End_Date(this.sp);
       if (date==null)
         date=rs.android.util.Date.Now();
 
@@ -364,12 +364,12 @@ public class Chart_Page
     if (this.date_dlg_id==Chart_Page.DLG_INPUT_START_DATE)
     {
       start_date=rs.android.util.Date.New_Date(year, month+1, day);
-      Setting.Set_Start_Date(this.sp, start_date);
+      rs.acctrak.db.Setting.Set_Start_Date(this.sp, start_date);
     }
     else if (this.date_dlg_id==Chart_Page.DLG_INPUT_END_DATE)
     {
       end_date=rs.android.util.Date.New_Date(year, month+1, day);
-      Setting.Set_End_Date(this.sp, end_date);
+      rs.acctrak.db.Setting.Set_End_Date(this.sp, end_date);
     }
     
     if (this.date_dlg_id!=0)
@@ -514,13 +514,13 @@ public class Chart_Page
     public java.sql.Date Get_Data_X_Min()
     {
       java.sql.Date res=null, series_min;
-      java.util.ArrayList<Financial_Action> fa_series;
+      java.util.ArrayList<rs.acctrak.db.Financial_Action> fa_series;
       
       if (rs.android.Util.NotEmpty(this.data))
       {
         for (String key: this.data.keySet())
         {
-          fa_series=(java.util.ArrayList<Financial_Action>)this.data.get(key);
+          fa_series=(java.util.ArrayList<rs.acctrak.db.Financial_Action>)this.data.get(key);
           series_min=(java.sql.Date)rs.android.Util.Min(fa_series, "action_date", null, null);
           if (res==null || (series_min!=null && series_min.getTime()<res.getTime()))
             res=series_min;
@@ -533,13 +533,13 @@ public class Chart_Page
     public java.sql.Date Get_Data_X_Max()
     {
       java.sql.Date res=null, series_max;
-      java.util.ArrayList<Financial_Action> fa_series;
+      java.util.ArrayList<rs.acctrak.db.Financial_Action> fa_series;
       
       if (rs.android.Util.NotEmpty(this.data))
       {
         for (String key: this.data.keySet())
         {
-          fa_series=(java.util.ArrayList<Financial_Action>)this.data.get(key);
+          fa_series=(java.util.ArrayList<rs.acctrak.db.Financial_Action>)this.data.get(key);
           series_max=(java.sql.Date)rs.android.Util.Max(fa_series, "action_date", null, null);
           if (res==null || (series_max!=null && series_max.getTime()>res.getTime()))
             res=series_max;
@@ -638,10 +638,10 @@ public class Chart_Page
     public void onDraw(android.graphics.Canvas canvas) 
     {
       android.graphics.PointF canvas_pt, last_pt=null;
-      java.util.ArrayList<Financial_Action> fa_series;
+      java.util.ArrayList<rs.acctrak.db.Financial_Action> fa_series;
       android.graphics.Paint data_paint;
       int c;
-      Financial_Action fa;
+      rs.acctrak.db.Financial_Action fa;
 
       Draw_Axis(canvas);
       
@@ -661,7 +661,7 @@ public class Chart_Page
           else
             data_paint=this.axis_paint;
           
-          fa_series=(java.util.ArrayList<Financial_Action>)this.data.get(key);
+          fa_series=(java.util.ArrayList<rs.acctrak.db.Financial_Action>)this.data.get(key);
           if (fa_series.size()==1)
           {
             fa=fa_series.get(0);

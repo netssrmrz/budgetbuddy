@@ -16,10 +16,10 @@ implements Runnable
   {
     Dismiss_Progress_Dialog del_dlg_fn;
     Show_Msg show_msg_fn;
-    Alert_Update upd;
+    rs.acctrak.db.Alert_Update upd;
     int res;
 
-    upd=new Alert_Update();
+    upd=new rs.acctrak.db.Alert_Update();
     res=upd.Do(this.activity, this, "user");
     
     if (this.activity!=null)
@@ -29,15 +29,15 @@ implements Runnable
         show_msg_fn=new Show_Msg();
         show_msg_fn.activity=this.activity;
         
-        if (res==Alert_Update.UPD_ERR_UPD_IN_PROGRESS)
+        if (res==rs.acctrak.db.Alert_Update.UPD_ERR_UPD_IN_PROGRESS)
           show_msg_fn.text="An update is currently in progress. Please wait before trying again.";
-        else if (res==Alert_Update.UPD_ERR_EMAIL_AUTH_FAILED)
+        else if (res==rs.acctrak.db.Alert_Update.UPD_ERR_EMAIL_AUTH_FAILED)
           show_msg_fn.text="Unable to update via e-mail due to incorrect login details.";
-        else if (res==Alert_Update.UPD_ERR_EMAIL_CONNECT_FAILED)
+        else if (res==rs.acctrak.db.Alert_Update.UPD_ERR_EMAIL_CONNECT_FAILED)
           show_msg_fn.text="There was a problem whilst trying to update via e-mail.";
-        else if (res==Alert_Update.UPD_ERR_EMAIL_FOLDER_UNK)
+        else if (res==rs.acctrak.db.Alert_Update.UPD_ERR_EMAIL_FOLDER_UNK)
           show_msg_fn.text="The requested e-mail folder could not be found.";
-        else if (res==Alert_Update.UPD_ERR_EMAIL_HOST_UNK)
+        else if (res==rs.acctrak.db.Alert_Update.UPD_ERR_EMAIL_HOST_UNK)
           show_msg_fn.text="The given e-mail host could not be found.";
         else 
           show_msg_fn.text="There was a problem whilst trying to update.";

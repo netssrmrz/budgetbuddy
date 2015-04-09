@@ -9,21 +9,21 @@ public class Alert_Update_Process
   public rs.android.Mail mail;
   public boolean check_email;
   public boolean check_sms;
-  public rs.acctrak.Db db;
+  public rs.acctrak.db.Db db;
 
   protected void onPreExecute ()
   {
     int msgCount=0;
     android.content.SharedPreferences sp;
     //String host, user, password, folder;
-    rs.acctrak.Setting settings;
+    rs.acctrak.db.Setting settings;
     
-    settings=new rs.acctrak.Setting();
-    this.db=new rs.acctrak.Db(this.main_activity);
+    settings=new rs.acctrak.db.Setting();
+    this.db=new rs.acctrak.db.Db(this.main_activity);
 
     sp = android.preference.PreferenceManager.getDefaultSharedPreferences(this.main_activity);
-    this.check_email = Setting.Get_Check_Email(sp);
-    this.check_sms = Setting.Get_Check_Sms(sp);
+    this.check_email = rs.acctrak.db.Setting.Get_Check_Email(sp);
+    this.check_sms = rs.acctrak.db.Setting.Get_Check_Sms(sp);
     
     if (check_email)
     {
@@ -40,7 +40,7 @@ public class Alert_Update_Process
     }
     if (check_sms)
     {
-      msgCount+=Alert.Get_Sms_Count(this.main_activity);
+      msgCount+=rs.acctrak.db.Alert.Get_Sms_Count(this.main_activity);
     }
 
     if (rs.android.Util.NotEmpty(msgCount) && msgCount>0)

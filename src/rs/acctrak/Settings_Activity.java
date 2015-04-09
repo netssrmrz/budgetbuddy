@@ -74,19 +74,22 @@ implements android.content.SharedPreferences.OnSharedPreferenceChangeListener
   {
     android.content.SharedPreferences prefs;
     android.preference.Preference pref;
-    rs.acctrak.Setting settings;
+    rs.acctrak.db.Setting settings;
 
-    settings=new rs.acctrak.Setting();
+    settings=new rs.acctrak.db.Setting();
     prefs=ps.getSharedPreferences();
     
     pref=ps.findPreference("check_auto_update");
-    pref.setSummary(rs.android.util.Type.To_String(Setting.Get_Check_Auto_Update(prefs), null, "On,Off"));
+    pref.setSummary(rs.android.util.Type.To_String(
+		  rs.acctrak.db.Setting.Get_Check_Auto_Update(prefs), null, "On,Off"));
     
     pref=ps.findPreference("check_sms");
-    pref.setSummary(rs.android.util.Type.To_String(Setting.Get_Check_Sms(prefs), null, "On,Off"));
+    pref.setSummary(rs.android.util.Type.To_String(
+		  rs.acctrak.db.Setting.Get_Check_Sms(prefs), null, "On,Off"));
     
     pref=ps.findPreference("check_email");
-    pref.setSummary(rs.android.util.Type.To_String(Setting.Get_Check_Email(prefs), null, "On,Off"));
+    pref.setSummary(rs.android.util.Type.To_String(
+		  rs.acctrak.db.Setting.Get_Check_Email(prefs), null, "On,Off"));
     
     pref=ps.findPreference("mail_host");
     pref.setSummary(settings.Get_Mail_Host(prefs));
@@ -101,7 +104,8 @@ implements android.content.SharedPreferences.OnSharedPreferenceChangeListener
     pref.setSummary(settings.Get_Mail_Folder(prefs));
     
     pref=ps.findPreference("guage_max");
-    pref.setSummary(rs.android.util.Type.To_String(Setting.Get_Guage_Max(prefs)));
+    pref.setSummary(rs.android.util.Type.To_String(
+		  rs.acctrak.db.Setting.Get_Guage_Max(prefs)));
   }
   
   public void onSharedPreferenceChanged(android.content.SharedPreferences prefs, String key) 
@@ -130,7 +134,7 @@ implements android.content.SharedPreferences.OnSharedPreferenceChangeListener
       if (guage_max<100)
       {
         prefs=ps.getSharedPreferences();
-        Setting.Set_Guage_Max(prefs, (float)100.0);
+        rs.acctrak.db.Setting.Set_Guage_Max(prefs, (float)100.0);
       }
     }
     Update_UI();

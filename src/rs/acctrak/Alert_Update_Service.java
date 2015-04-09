@@ -10,9 +10,9 @@ public class Alert_Update_Service extends android.app.Service
     @Override
     public void run()
     {
-      Alert_Update upd;
+      rs.acctrak.db.Alert_Update upd;
       
-      upd=new Alert_Update();
+      upd=new rs.acctrak.db.Alert_Update();
       upd.Do(ctx, null, "service");
     }
   }
@@ -28,6 +28,7 @@ public class Alert_Update_Service extends android.app.Service
       this.timer.cancel();
     }
   }  
+	
   @Override
   public void onCreate() 
   {

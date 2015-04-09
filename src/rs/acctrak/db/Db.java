@@ -1,24 +1,24 @@
-package rs.acctrak;
+	package rs.acctrak.db;
 
-public class Db 
-extends rs.android.Db
-{
-  Db(android.content.Context context)
-  {
-    OpenHelper open_helper;
-		Table t;
+	public class Db 
+	extends rs.android.Db
+	{
+		public Db(android.content.Context context)
+		{
+			OpenHelper open_helper;
+			Table t;
 
-    this.context=context;
-    db_name="BudgetBuddyDb";
-    this.db_version=1;
-    this.tables = new Table[4];
+			this.context=context;
+			db_name="BudgetBuddyDb";
+			this.db_version=1;
+			this.tables = new Table[4];
 
-		
-		t=new Table();
-		t.name="Alert";
-		t.update_type=rs.android.Db.Table.UPDATE_TYPE_NONE;
-		t.create_sql=
-		  "CREATE TABLE Alert (" +
+
+			t=new Table();
+			t.name="Alert";
+			t.update_type=rs.android.Db.Table.UPDATE_TYPE_NONE;
+			t.create_sql=
+				"CREATE TABLE Alert (" +
 				"id INTEGER PRIMARY KEY, " +
 				"from_address TEXT, " +
 				"subject TEXT, " +
@@ -26,59 +26,59 @@ extends rs.android.Db
 				"balance NUMERIC, " +
 				"ext_id TEXT, "+
 				"source TEXT)";
-		this.tables[0]=t;
+			this.tables[0]=t;
 
-		t=new Table();
-		t.name="Financial_Action";
-		t.update_type=rs.android.Db.Table.UPDATE_TYPE_NONE;
-		t.create_sql=
-			"CREATE TABLE Financial_Action (" +
-			"id INTEGER PRIMARY KEY, " +
-			"amount NUMERIC, " +
-			"action_date INTEGER, " +
-			"action_type TEXT)";
-		this.tables[1]=t;
+			t=new Table();
+			t.name="Financial_Action";
+			t.update_type=rs.android.Db.Table.UPDATE_TYPE_NONE;
+			t.create_sql=
+				"CREATE TABLE Financial_Action (" +
+				"id INTEGER PRIMARY KEY, " +
+				"amount NUMERIC, " +
+				"action_date INTEGER, " +
+				"action_type TEXT)";
+			this.tables[1]=t;
 
-		t=new Table();
-		t.name="Setting";
-		t.update_type=rs.android.Db.Table.UPDATE_TYPE_NONE;
-		t.create_sql=
-			"CREATE TABLE Setting (" +
-			"id INTEGER PRIMARY KEY, " +
-			"key TEXT, " +
-			"value TEXT)";
-		this.tables[2]=t;
+			t=new Table();
+			t.name="Setting";
+			t.update_type=rs.android.Db.Table.UPDATE_TYPE_NONE;
+			t.create_sql=
+				"CREATE TABLE Setting (" +
+				"id INTEGER PRIMARY KEY, " +
+				"key TEXT, " +
+				"value TEXT)";
+			this.tables[2]=t;
 
-		t=new Table();
-		t.name="Alert_Update";
-		t.update_type=rs.android.Db.Table.UPDATE_TYPE_NONE;
-		t.create_sql=
-			"CREATE TABLE Alert_Update (" +
-			"id INTEGER PRIMARY KEY, " +
-			"origin TEXT, " +
-			"start_date INTEGER, " +
-			"last_update_date INTEGER, " +
-			"new_emails INTEGER, " +
-			"new_sms INTEGER, " +
-			"status TEXT)";
-	  this.tables[3]=t;
+			t=new Table();
+			t.name="Alert_Update";
+			t.update_type=rs.android.Db.Table.UPDATE_TYPE_NONE;
+			t.create_sql=
+				"CREATE TABLE Alert_Update (" +
+				"id INTEGER PRIMARY KEY, " +
+				"origin TEXT, " +
+				"start_date INTEGER, " +
+				"last_update_date INTEGER, " +
+				"new_emails INTEGER, " +
+				"new_sms INTEGER, " +
+				"status TEXT)";
+			this.tables[3]=t;
 
-		// dropped tables ===========================================================
-		/*t=new Table();
-		 t.name="Log";
-		 t.update_type=rs.android.Db.Table.UPDATE_TYPE_DROP;
-		 t.create_sql=
-		 "CREATE TABLE Log (" +
-		 "id INTEGER PRIMARY KEY, " +
-		 "log_date INTEGER, " +
-		 "msg TEXT)";
-		 this.tables[4]=t;*/
+			// dropped tables ===========================================================
+			/*t=new Table();
+			 t.name="Log";
+			 t.update_type=rs.android.Db.Table.UPDATE_TYPE_DROP;
+			 t.create_sql=
+			 "CREATE TABLE Log (" +
+			 "id INTEGER PRIMARY KEY, " +
+			 "log_date INTEGER, " +
+			 "msg TEXT)";
+			 this.tables[4]=t;*/
 
-    open_helper=new OpenHelper();
-    if (open_helper!=null)
-      this.conn=open_helper.getWritableDatabase();
-  }
-}
+			open_helper=new OpenHelper();
+			if (open_helper!=null)
+				this.conn=open_helper.getWritableDatabase();
+		}
+	}
 
 /*public class Db 
   extends rs.android.Db

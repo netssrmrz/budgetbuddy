@@ -1,8 +1,5 @@
 package rs.acctrak; 
 
-//import android.net.Uri;
-//import android.view.View;
-
 public class Main_Activity 
   extends android.support.v4.app.FragmentActivity 
 {  
@@ -78,7 +75,7 @@ public class Main_Activity
   public float wr, hr;
 
   public Update_Receiver upd_receiver;
-  public rs.acctrak.Db db;
+  public rs.acctrak.db.Db db;
   public Update_Function update_fn;
 
   @Override
@@ -90,7 +87,7 @@ public class Main_Activity
     android.util.DisplayMetrics dm;
 
     super.onCreate(null);
-    this.db=new rs.acctrak.Db(this);
+    this.db=new rs.acctrak.db.Db(this);
     dm=this.getResources().getDisplayMetrics();
     hr=dm.heightPixels/(float)100;
     wr=dm.widthPixels/(float)100;
@@ -122,7 +119,7 @@ public class Main_Activity
     }
     
     sp = android.preference.PreferenceManager.getDefaultSharedPreferences(this);
-    if (Setting.Get_Check_Auto_Update(sp))
+    if (rs.acctrak.db.Setting.Get_Check_Auto_Update(sp))
       startService(new android.content.Intent(this, Alert_Update_Service.class));
   }
   
@@ -134,7 +131,7 @@ public class Main_Activity
     super.onResume();
     
     if (this.db==null)
-      this.db=new rs.acctrak.Db(this);
+      this.db=new rs.acctrak.db.Db(this);
 
     this.upd_receiver=new Update_Receiver();
     filter = new android.content.IntentFilter();
@@ -224,7 +221,7 @@ public class Main_Activity
     return res;
   }
   
-  public void Update_UI(rs.acctrak.Db db)
+  public void Update_UI(rs.acctrak.db.Db db)
   {
     if (rs.android.Util.NotEmpty(this.guage_page))
       this.guage_page.Update_UI(db);
